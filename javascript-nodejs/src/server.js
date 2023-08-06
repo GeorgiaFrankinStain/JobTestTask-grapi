@@ -15,8 +15,10 @@ app.listen(HTTP_PORT, () => {
 });
 
 app.get("/api/users", (req, res, next) => {
-    var sql = "select * from user"
-    var params = []
+
+    const n = req.query.n;
+
+    console.log(n);
 
     if (true) {
         res.status(400).json({"error":"err.message"});
