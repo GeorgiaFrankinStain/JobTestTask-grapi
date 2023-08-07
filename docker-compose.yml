@@ -1,0 +1,47 @@
+version: '3.3'
+services:
+  gfs-m1-greenapi-server-client-http:
+    build: 
+      context: ./javascript-nodejs/
+    environment:
+      - DATABASE_HOST=host.docker.internal:3306 
+    container_name: GFS-M1 
+    ports:
+      - '8000:8000'
+    depends_on:
+      - gfs-myrabbitmq
+    networks:
+      frontend-to-backends:
+        ipv4_address: 172.16.238.10
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  gfs-m2:
+    build: 
+      context: ./M2/
+    container_name: GFS-M2 
+    stdin_open: true
+    tty: true
+    depends_on:
+      - gfs-myrabbitmq
+    networks:
+      frontend-to-backends:
+        ipv4_address: 172.16.238.11
+
+  gfs-myrabbitmq:
+    image: rabbitmq:3.10.7-management
+    ports:
+      - '5672:5672'
+    networks:
+      frontend-to-backends:
+        ipv4_address: 172.16.238.12
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+#without reverse proxy no need
+networks:
+  frontend-to-backends:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24

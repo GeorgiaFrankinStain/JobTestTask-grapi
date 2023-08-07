@@ -27,7 +27,8 @@ app.get("/api/users", async (req, res, next) => {
     const n = req.query.n;
 
     console.log(n);
-    amqp.connect('amqp://localhost', function(error0, connection) {
+    amqp.connect('amqp://172.16.238.12', function(error0, connection) {
+    // amqp.connect('amqp://localhost', function(error0, connection) {
         if (error0) {
             throw error0;
         }
