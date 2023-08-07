@@ -1,5 +1,19 @@
 version: '3.3'
 services:
+
+
+  gfsmyrabbitmq:
+    image: rabbitmq:3.10.7-management
+    ports:
+      - '5672:5672'
+    networks:
+      frontend-to-backends:
+        ipv4_address: 172.16.238.12
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+
+
   gfs-m1-greenapi-server-client-http:
     build: 
       context: ./javascript-nodejs/
@@ -9,7 +23,7 @@ services:
     ports:
       - '8000:8000'
     depends_on:
-      - gfs-myrabbitmq
+      - "gfsmyrabbitmq"
     networks:
       frontend-to-backends:
         ipv4_address: 172.16.238.10
@@ -23,20 +37,10 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - gfs-myrabbitmq
+      - "gfsmyrabbitmq"
     networks:
       frontend-to-backends:
         ipv4_address: 172.16.238.11
-
-  gfs-myrabbitmq:
-    image: rabbitmq:3.10.7-management
-    ports:
-      - '5672:5672'
-    networks:
-      frontend-to-backends:
-        ipv4_address: 172.16.238.12
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
 
 #without reverse proxy no need
 networks:
